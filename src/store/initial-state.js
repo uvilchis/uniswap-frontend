@@ -1,19 +1,9 @@
-// what states do you need upon initialization?
-
-// connected: are you connnected? default state = false 
-// props.metamask --> maybe we should keep this in global state too?
-
-// both of these are set to false in the default state 
-// fire dispatch functions to check for installation and connection in the default store 
-// you are probably going to be storing stuff like invariants and all that jazz here 
-
 export default {
-  // lets check if metamask is installed 
-  // also, lets assume that we're disconnected initially 
-  // we're going to need to include a seperate nest for exchange actions
-  web3: { 
+  web3Store: {
+    web3: {},
     connected: false,
-    currentMaskAddress: '',
+    aboutToggle: false,
+    currentMaskAddress: undefined,
     metamaskLocked: true,
     interaction: '',
     networkMessage: '',
@@ -22,27 +12,25 @@ export default {
     blockTimestamp: '',
     exchangeType: 'ETH to Token',
     exchangeAddresses: {
-      UNI: '0xcDc30C3b02c5776495298198377D2Fc0fd6B1F1C',
-      SWT: '0x4632a7Cd732c625dcc48d75E289c209422e1D2B7'
+      addresses: [
+        ['BAT','0x80f5C1beA2Ea4a9C21E4c6D7831ae2Dbce45674d'], 
+        ['OMG','0x1033f09e293200de63AF16041e83000aFBBfF5c0']
+      ]
     },
     tokenAddresses: {
-      UNI: '0x350E5DD084ecF271e8d3531D4324443952F47756',
-      SWT: '0x8B2A87F8243f23C33fb97E23a21Ae8EDB3b71AcA'
+      addresses: [
+        ['BAT','0xDA5B056Cfb861282B4b59d29c9B395bcC238D29B'], 
+        ['OMG','0x879884c3C46A24f56089f3bBbe4d5e38dB5788C0']
+      ]
     }
   },
-  exchangeContracts: {
-    UNI: '',
-    SWT: ''
-  },
-  tokenContracts: {
-    UNI: '',
-    SWT: ''
-  },
+  exchangeContracts: {},
+  tokenContracts: {},
   exchange: {
     inputBalance: 0,
     outputBalance: 0,
     inputToken: { value: 'ETH', label: 'ETH', clearableValue: false },
-    outputToken: { value: 'UNI', label: 'UNI', clearableValue: false },
+    outputToken: { value: 'OMG', label: 'OMG', clearableValue: false },
     invariant1: 0,
     invariant2: 0,
     marketEth1: 0,

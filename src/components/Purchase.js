@@ -18,8 +18,8 @@ class Purchase extends Component {
 
   ethToTokenPurchase = () => {
     var exchange = this.props.symbolToExchangeContract(this.props.exchange.outputToken.value);
-    var minTokens = (this.props.exchange.outputValue/10**18).toString();
-    var minTokensInt = this.props.web3Store.web3.utils.toWei(minTokens);
+    var minTokens = this.props.exchange.outputValue.toString();
+    var minTokensInt = parseInt(minTokens, 10).toString();
     var ethSold = this.props.exchange.inputValue;
     var weiSold = this.props.web3Store.web3.utils.toWei(ethSold);
     var timeout = this.props.web3Store.blockTimestamp + 300; //current block time + 5mins
@@ -27,7 +27,7 @@ class Purchase extends Component {
 
     exchange.methods.ethToTokenSwap(minTokensInt, timeout).send({from: this.props.web3Store.currentMaskAddress, value: weiSold})
       .on('transactionHash', (result) => {
-        // console.log('Transaction Hash created'        
+        // console.log('Transaction Hash created'
         // let transactions = this.state.transactions
         // transactions.push(result);
         // transactions is cookie stuff, we'll keep that in state
@@ -42,22 +42,23 @@ class Purchase extends Component {
         console.log(receipt)
       })  //Transaction Submitted to blockchain
       .on('confirmation', (confirmationNumber, receipt) => {
-        console.log("Block Confirmations: " + confirmationNumber)
-        if(confirmationNumber === 1) {
-          this.getAccountInfo();
-        }
+        console.log("Block Confirmations: " + confirmationNumber);
+        // if(confirmationNumber === 1) {
+        //   this.getAccountInfo();
+        // }
       })  //Transaction Mined
       .on('error', console.error);
   }
 
   tokenToEthPurchase = () => {
     var exchange = this.props.symbolToExchangeContract(this.props.exchange.inputToken.value);
-    var minEth = (this.props.exchange.outputValue/10**18).toString();
-    var minEthInt = this.props.web3Store.web3.utils.toWei(minEth);
+    var minEth = this.props.exchange.outputValue.toString();
+    var minEthInt = parseInt(minEth, 10).toString();
     var tokensSold = this.props.exchange.inputValue;
+    // toWei needs to be replaced with *decimals
     var tokensSoldInt = this.props.web3Store.web3.utils.toWei(tokensSold);
     var timeout = this.props.web3Store.blockTimestamp + 300; //current block time + 5mins
-  
+
     exchange.methods.tokenToEthSwap(tokensSoldInt, minEthInt, timeout).send({from: this.props.web3Store.currentMaskAddress})
       .on('transactionHash', (result) => {
         // console.log('Transaction Hash created')
@@ -77,15 +78,15 @@ class Purchase extends Component {
   tokenToTokenPurchase = () => {
     var exchange = this.props.symbolToExchangeContract(this.props.exchange.inputToken.value);
     var tokenOutAddress = this.props.symbolToTokenAddress(this.props.exchange.outputToken.value);
-    var minTokens = (this.props.exchange.outputValue/10**18).toString();
-    var minTokensInt = this.props.web3Store.web3.utils.toWei(minTokens);
+    var minTokens = this.props.exchange.outputValue.toString();
+    var minTokensInt = parseInt(minTokens, 10).toString();
     var tokensSold = this.props.exchange.inputValue;
     var tokensSoldInt = this.props.web3Store.web3.utils.toWei(tokensSold);
     var timeout = this.props.web3Store.blockTimestamp + 300; //current block time + 5mins
-    console.log('tokenOutAddress', tokenOutAddress);
-    console.log('minTokensInt', minTokensInt);
-    console.log('tokensSoldInt', tokensSoldInt);
-    console.log('timeout', timeout);
+    // console.log('tokenOutAddress', tokenOutAddress);
+    // console.log('minTokensInt', minTokensInt);
+    // console.log('tokensSoldInt', tokensSoldInt);
+    // console.log('timeout', timeout);
 
     exchange.methods.tokenToTokenSwap(tokenOutAddress, tokensSoldInt, minTokensInt, timeout).send({from: this.props.web3Store.currentMaskAddress})
       .on('transactionHash', (result) => {
@@ -107,7 +108,7 @@ class Purchase extends Component {
     if (this.props.web3Store.interaction === 'input') {
         return (
           <a className="swap border pa2" role="button" onClick={() => {this.purchaseTokens()}}>
-            <b>{"I want to swap " + this.props.exchange.inputValue + " " + this.props.exchange.inputToken.value + " for " + this.props.exchange.outputValue/10**18 + " " + this.props.exchange.outputToken.value}</b>
+            <b>{"I want to swap " + this.props.exchange.inputValue + " " + this.props.exchange.inputToken.value + " for " + (this.props.exchange.outputValue/10**18).toFixed(6) + " " + this.props.exchange.outputToken.value}</b>
           </a>
         )
       } else {
